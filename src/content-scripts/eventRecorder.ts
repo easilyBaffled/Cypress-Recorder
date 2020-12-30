@@ -29,22 +29,19 @@ function parseEvent(event: Event): ParsedEvent {
             "data-testid"
         )}]`;
     else
-        selector =
-            (event.target as Element,
-            {
-                attr: (name, value) => {
-                    return (
-                        name === "data-cy" ||
-                        name === "data-test" ||
-                        name === "data-testid"
-                    );
-                }
-            });
+        selector = finder(event.target as Element, {
+            attr: (name, value) => {
+                return (
+                    name === "data-cy" ||
+                    name === "data-test" ||
+                    name === "data-testid"
+                );
+            }
+        });
     // @ts-ignore
-    const innerText = event.target.innerText || null;
+    const innerText = event.target.innerText || null; // TODO: should test if this works
     const parsedEvent: ParsedEvent = {
         selector,
-        // @ts-ignore
         innerText,
         action: event.type,
         tag: (event.target as Element).tagName,
