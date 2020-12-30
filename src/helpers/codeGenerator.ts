@@ -7,6 +7,7 @@
 import type { ParsedEvent } from "../types";
 import { EventType } from "../constants";
 
+// TODO: may need .filter( ":visible" ) in the case of something like the right-click menu being rendered but not visible
 const selection = (event: ParsedEvent) =>
     event.innerText
         ? `contains('${event.innerText}')`
