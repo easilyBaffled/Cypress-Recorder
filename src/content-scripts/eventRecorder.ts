@@ -4,6 +4,7 @@
  * Responsible for recording the DOM events.
  */
 import finder from "@medv/finder";
+import $ from "jquery";
 import type { ParsedEvent } from "../types";
 import { EventType } from "../constants";
 
@@ -40,9 +41,26 @@ function parseEvent(event: Event): ParsedEvent {
         });
     // @ts-ignore
     const innerText = event.target.innerText || null; // TODO: should test if this works
+    const shouldUseContains =
+        innerText &&
+        $(`body :contains('${innerText}')`).filter((i, el) => {
+            return [...el.childNodes].some(
+                (el) => el.nodeType === 3 && el.textContent.includes(innerText)
+            );
+        }).length === 1;
+    const shouldUseGetContains =
+        innerText &&
+        !shouldUseContains &&
+        $(`body :contains('${innerText}'):visible`).filter((i, el) => {
+            return [...el.childNodes].some(
+                (el) => el.nodeType === 3 && el.textContent.includes(innerText)
+            );
+        }).length === 1;
     const parsedEvent: ParsedEvent = {
         selector,
         innerText,
+        shouldUseContains,
+        shouldUseGetContains,
         action: event.type,
         tag: (event.target as Element).tagName,
         value: (event.target as HTMLInputElement).value

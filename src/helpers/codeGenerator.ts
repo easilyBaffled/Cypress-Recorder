@@ -9,9 +9,15 @@ import { EventType } from "../constants";
 
 // TODO: may need .filter( ":visible" ) in the case of something like the right-click menu being rendered but not visible
 const selection = (event: ParsedEvent) =>
-    event.innerText
-        ? `contains('${event.innerText}')`
-        : `get('${event.selector}')`;
+    ({
+        [true as any]: `get('${event.selector}')`,
+        [event.shouldUseContains as any]: `contains('${event.innerText}')`,
+        [event.shouldUseGetContains as any]: `get(':contains("${event.innerText}"):visible')`
+    }[true as any]);
+
+// event.innerText
+//     ? `contains('${event.innerText}')`
+//     : `get('${event.selector}')`;
 
 /**
  * Helper functions that handle each action type.

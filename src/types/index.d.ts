@@ -10,6 +10,8 @@ export interface ParsedEvent {
     href?: string;
     inputType?: string;
     innerText?: string | null;
+    shouldUseContains: boolean;
+    shouldUseGetContains: boolean;
 }
 
 export interface Session {
